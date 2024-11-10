@@ -1,0 +1,13 @@
+{
+  "name": "text-analyzer",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "analyzer.js",
+  "scripts": {
+    "analyze": "node analyzer.js"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "dotenv": "^16.0.0"
+  }
+}
