@@ -1,6 +1,8 @@
 import { promises as fs } from "fs";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import mammoth from "mammoth";
+import path from "path";
 
 dotenv.config();
 
@@ -17,9 +19,21 @@ const loadConfig = async (filePath) => {
   return JSON.parse(data);
 };
 
+const readFile = async (filePath) => {
+  const extension = path.extname(filePath).toLowerCase();
+
+  if (extension === ".docx") {
+    const buffer = await fs.readFile(filePath);
+    const result = await mammoth.extractRawText({ buffer });
+    return result.value;
+  }
+
+  return await fs.readFile(filePath, "utf8");
+};
+
 const analyzeText = async (filePath) => {
   try {
-    const text = await fs.readFile(filePath, "utf8");
+    const text = await readFile(filePath);
     const systemPrompt = await loadPrompt("system-prompt.md");
     const userPrompt = await loadPrompt("user-prompt.md");
     const config = await loadConfig("openai-config.json");
